@@ -48,8 +48,17 @@ function DateRangeComponent({
   presets,
   startInputLabel = 'Start date',
   onPresetClick,
+  defaultValue,
 }: Props) {
-  const [state, dispatch] = useReducer(reducer, initialState, init);
+  const initial = defaultValue
+    ? {
+        ...initialState,
+        range: defaultValue,
+        draft: defaultValue,
+        viewportDate: defaultValue[0],
+      }
+    : initialState;
+  const [state, dispatch] = useReducer(reducer, initial, init);
   const [presetOption, setPresetOption] = useState('');
 
   // When our internal range value changes, if a callback for onChange is passed

@@ -68,17 +68,17 @@ function locale(range) {
 
 function DateRangeButton({ ...args }) {
   const defaultText = 'Select a date range';
-  const [buttonText, setButtonText] = useState(defaultText);
-  const [active, setActive] = useState(true);
+  const [value, setValue] = useState(null);
+  const [active, setActive] = useState(false);
 
   const onChange = (range: [Date, Date]) => {
     const validRange = range[0] && range[1];
 
-    if (validRange) {
-      setButtonText(locale(range));
+    if (validRange && range !== value) {
+      setValue(range);
       setActive(false);
     }
-    if (!validRange) setButtonText(defaultText);
+    if (!validRange) setValue(null);
   };
 
   const childrenRef = useRef();
@@ -91,7 +91,12 @@ function DateRangeButton({ ...args }) {
     <PopOver
       active={active}
       content={
-        <DateRange ref={popOverRef} onChange={onChange} {...args} />
+        <DateRange
+          ref={popOverRef}
+          onChange={onChange}
+          defaultValue={value}
+          {...args}
+        />
       }
       style={
         args.presets && {
@@ -106,7 +111,7 @@ function DateRangeButton({ ...args }) {
         onClick={() => setActive(!active)}
         ref={childrenRef}
       >
-        {buttonText}
+        {value ? locale(value) : defaultText}
       </Button>
     </PopOver>
   );
